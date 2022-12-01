@@ -22,9 +22,21 @@ This file select for border counties that have experienced difference in policy 
 
 Cases were chosen where for both states all border counties are under the same covid policy(for example: state1: all border counties have masking mandates; state2: all border counties does not have masking mandate). 
 
-Input files: Policies.csv, county_adjacency.csv
+Input files: refer to Data Description section
 
-Output file: mask_test.csv, which will be used as input for 'NPI_death.ipynb'
+(1) Policies.csv
+
+(2) county_adjacency.csv
+
+Output file: 
+
+Files will be used as input for 'NPI_death.ipynb': 
+
+(1) 'mask.csv': counties to test based on whether they adopted public maskingmandates
+
+(2) 'sah_applied_or_not.csv': counties to test based on whether they adopted any SAH orders
+
+(3) 'sah_mandatory_or_not.csv': counties to test based on whether they adopted any mandatory SAH orders 
 
 ## (2) Statistical Testing
 The pipeline is called 'NPI_death.ipynb'. To run the pipeline, either open it on google colab or in local jupyter notebook. Upload the corresponding files and the pipeline is ready to run.
