@@ -1,5 +1,6 @@
 # EPI_Project-Covid19-Death-and-NPI
-This is  our EPI 8803 project. We are investigating how Nonpharmaceutical Interventions (NPIs) affect the number of death in each county by week using a statistical approach.  We aim to evaluate the importance of NPIs and potentially give advice on policy administration.\
+This is  our EPI 8803 project. We are investigating how Nonpharmaceutical Interventions (NPIs) affect the number of death in each county by week using a statistical approach.  We aim to evaluate the importance of NPIs and potentially give advice on policy administration. \
+Also, we include the t-test analysis on demographic factors at the end of the file, in order to investigate the influence of demographic factor and give an insight on the result from the above study. \
 Note that although we used the death count in each county to evaluate the relationship between NPIs and death count, the dataset can be potentially replaced to case count and instead study the relationship between NPIs and case count.
 
 ## Data Description
