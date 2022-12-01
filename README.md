@@ -13,7 +13,7 @@ contains US COVID-19 policies, retrieved from CDC: https://ephtracking.cdc.gov/D
 This file contains information on masking mandate(0: no public musking mandate; 1: public masking mandate) and stay-at-home policies(SAH, on an increasing scle from 1 to 7 corresponding to policies from no order to mandatoru SAH for all people)
     
 #### 'county_adjacency.csv': 
-information on name,fips code of all US counties and it's neighboring counties, retrieved from US sensus bureau https://www.census.gov/. 
+information on name,fips code of all US counties and its neighboring counties, retrieved from US census https://www.census.gov/. 
     
 ## User Manual
 ## (1) Data Preprocessing
