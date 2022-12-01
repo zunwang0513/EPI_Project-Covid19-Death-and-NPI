@@ -4,11 +4,20 @@ Also, we include the t-test analysis on demographic factors at the end of the fi
 Note that although we used the death count in each county to evaluate the relationship between NPIs and death count, the dataset can be potentially replaced to case count and instead study the relationship between NPIs and case count.
 
 ## Data Description
-
-
-
-
+(1) filename: Mortality of US county by date, retrieved from: 
+(2) 'Policies.csv': contains US COVID-19 policies, retrieved from CDC: https://ephtracking.cdc.gov/DataExplorer/?c=33
+    This file contains information on masking mandate(0:no public musking mandate; 1: public masking mandate) and stay-at-home policies(SAH, on an increasing scle from 1 to 7 corresponding to policies from no order to mandatoru SAH for all people)
+(3) 'county_adjacency.csv': information on name,fips code of all US counties and it's neighboring counties, retrieved from US sensus bureau https://www.census.gov/. 
+    
 ## User Manual
+## (1) Data Preprocessing
+#### process_policy_border_county.ipynb
+This file select for border counties that have experienced difference in policy at some time point with their neighboring counties in another state.
+Cases were chosen where for both states all border counties are under the same covid policy(for example: state1: all border counties have masking mandates; state2: all border counties does not have masking mandate). 
+Input files: Policies.csv, county_adjacency.csv
+Output file: mask_test.csv, which will be used as input for 'NPI_death.ipynb'
+
+## (2) Statistical Testing
 The pipeline is called 'NPI_death.ipynb'. To run the pipeline, either open it on google colab or in local jupyter notebook. Upload the corresponding files and the pipeline is ready to run.
 ### Packages need to be installed:
 numpy, pandas, os, scipy, io, copy, urllib, json, plotly, matplotlib. \
