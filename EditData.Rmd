@@ -1,0 +1,140 @@
+---
+title: "CSVEdit"
+author: "Ojas Rade"
+date: "11/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(np)
+library(zoo)
+library(tidyverse)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+demographics <- read.csv(file = "demographic_county.csv") %>%
+  rename("state_id" = "State", "county" = "Area_name")
+
+demographics
+write.csv(demographics, "C:\\Users\\ojasr\\Downloads\\Demographics.csv")
+```
+
+```{r}
+covid <- read.csv("counties.timeseries.csv") %>%
+  drop_na("actuals.deaths") %>%
+  drop_na("actuals.cases") %>%
+  mutate(year = lubridate::year(date), 
+                month = lubridate::month(date), 
+                day = lubridate::day(date)) %>%
+  filter(year == 2020) %>%
+  group_by(fips,month,county) %>%
+  summarize(cases = sum(actuals.cases), deaths = sum(actuals.deaths))
+  
+covid
+```
+
+```{r}
+MaskMandates <- read.csv("MaskMandates.csv")
+```
+```{r}
+MaskMandates <- MaskMandates %>%
+  mutate(week = strftime(Date, format = "%V")) %>%
+  group_by(State,CountyFIPS,County,week) %>%
+  summarise(Mask_Mandates = max(Value)) %>%
+  filter(week != "01") %>%
+  filter(week >=15)
+
+MaskMandates
+```
+```{r}
+SAH <- read.csv("StayAtHomeOrders.csv")
+```
+```{r}
+SAH <- SAH %>%
+  mutate(week = strftime(Date, format = "%V")) %>%
+  group_by(State,CountyFIPS,County,week) %>%
+  summarise(SAH = max(Value)) %>%
+  filter(week >=15)
+
+SAH
+```
+```{r}
+BusClose <- read.csv("BusinessClosings.csv")
+```
+```{r}
+BusClose <- BusClose %>%
+  mutate(week = strftime(Date, format = "%V")) %>%
+  group_by(State,CountyFIPS,County,week) %>%
+  summarise(BusClose = max(Value)) %>%
+  filter(week >=15)
+
+BusClose
+```
+
+
+```{r}
+Policies <- merge(MaskMandates,SAH, all=TRUE)
+Policies <- merge(Policies,BusClose, all=TRUE)
+Policies
+```
+```{r}
+Policies <- na.locf(na.locf(Policies),fromLast=TRUE)
+Policies
+write.csv(Policies, "C:\\Users\\ojasr\\Downloads\\Policies.csv")
+```
+
+```{r}
+covCon <- covid %>%
+  group_by(county) %>%
+  summarise(fips,county,cases = sum(cases), deaths = sum(deaths)) %>%
+  distinct() 
+covCon
+```
+```{r}
+demographics2 <- read.csv("cleaned_sensus.csv") %>%
+  rename(fips = FIPS)
+demographics2
+```
+```{r}
+covDem <- demographics %>%
+  rename(fips = FIPS_code)
+covDem <- merge(covDem,covCon, by="fips", all=TRUE)
+covDem <- merge(covDem,demographics2, by="fips", all=TRUE) %>%
+  drop_na() %>%
+  mutate(Minority = Black+Asian+Native_American+Multiracial)%>%
+  mutate(UnempRate = case_when(Unemployment_rate_2020 > mean(Unemployment_rate_2020) ~ "High",
+                              TRUE ~ "Low"), Population = case_when(Population.2020 > mean(Population.2020) ~ "High",
+                              TRUE ~ "Low" ), PercBach = case_when(Percent.of.adults.with.a.bachelor.s.degree.or.higher.2016.20 > mean(Percent.of.adults.with.a.bachelor.s.degree.or.higher.2016.20) ~ "High",
+                              TRUE ~ "Low" ), MinorityRate = case_when(Minority > mean(Minority) ~ "High",
+                              TRUE ~ "Low" )) %>%
+  select(fips,state_id,county = county.x, UnempRate, Population, PercBach, MinorityRate, cases, deaths) %>%
+  filter(state_id == c("AL","MS"))
+  
+covDem
+
+```
+```{r}
+write.csv(covDem, "C:\\Users\\ojasr\\Downloads\\Demographics.csv")
+```
